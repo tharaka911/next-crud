@@ -1,89 +1,48 @@
-// import Link from "next/link";
-// import RemoveBtn from "./RemoveBtn";
-// import { HiPencilAlt } from "react-icons/hi";
-
-// export default async function TopicsList() {
-//   const { topics } = await getTopics();
-
-//   return (
-//     <>
-//       {topics?.map((t) => (
-//         <div className="p-4 border border-slate-300 my-3 flex justify-between gap-5" key={t._id} >
-//           <div>
-//             <h2 className="font-bold text-2xl">{t.title}</h2>
-//             <div>{t.description}</div>
-//           </div>
-
-//           <div className="flex gap-2 items-start">
-//             <RemoveBtn />
-//             <Link href={`/editTopic/${t._id}`}>
-//               <HiPencilAlt size={24} />
-//             </Link>
-//           </div>
-//         </div>
-//       ))}
-//     </>
-//   );
-// }
-
-// const getTopics = async () => {
-//   const res = await fetch("http://localhost:3000/api/topics", {
-//     caches: "no-store",
-//   });
-
-//   if (!res.ok) {
-//     throw new Error("Failed to fetch topics");
-//   }
-
-//   const topics = await res.json();
-
-//   return topics;
-// };
-
-
 import Link from "next/link";
 import RemoveBtn from "./RemoveBtn";
 import { HiPencilAlt } from "react-icons/hi";
 
 const getTopics = async () => {
-  const res = await fetch("http://localhost:3000/api/topics", {
-    caches: "no-store",
-  });
+  try {
+    const res = await fetch("http://localhost:3000/api/topics", {
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch topics");
+    if (!res.ok) {
+      throw new Error("Failed to fetch topics");
+    }
+
+    const topics = await res.json();
+    return topics;
+
+  } catch (error) {
+    console.log("Error loading topics: ", error);
   }
-
-  const topics = await res.json();
-
-  return topics;
 };
 
 export default async function TopicsList() {
-  try {
-    const { topics } = await getTopics();
-
+  const topics  = await getTopics();
+    
     return (
-      <>
-        {topics.map((t) => (
-          <div className="p-4 border border-slate-300 my-3 flex justify-between gap-5" key={t._id}>
-            <div>
-              <h2 className="font-bold text-2xl">{t.title}</h2>
-              <div>{t.description}</div>
-            </div>
-
-            <div className="flex gap-2 items-start">
-              <RemoveBtn />
-              <Link href={`/editTopic/${t._id}`}>
-                <HiPencilAlt size={24} />
-              </Link>
-            </div>
+    <>
+      {topics.map((t) => (
+        <div
+          key={t._id}
+          className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start"
+        >
+          <div>
+            <h2 className="font-bold text-2xl">{t.title}</h2>
+            <div>{t.description}</div>
           </div>
-        ))}
-      </>
-    );
-  } catch (error) {
-    return <div>Error: {error.message}</div>;
-  }
-}
 
+          <div className="flex gap-2">
+            <RemoveBtn id={t._id} />
+            <Link href={`/editTopic/${t._id}`}>
+              <HiPencilAlt size={24} />
+            </Link>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
