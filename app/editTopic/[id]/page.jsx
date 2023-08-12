@@ -1,9 +1,9 @@
-import TopicsList from "@/components/EditTopicForm";
+import EditTopicsList from "@/components/EditTopicList";
 
-export default function Home() {
+export default function editTopic() {
   return (
     <>
-      <EditTopicForm />
+      <EditTopicsList />
       
     </>
   );

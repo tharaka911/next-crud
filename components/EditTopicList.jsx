@@ -1,4 +1,4 @@
-export default async function EditTopicsList() {
+export default function EditTopicsList() {
     
       
       return (
